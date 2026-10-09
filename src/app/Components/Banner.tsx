@@ -1,0 +1,35 @@
+import Image from 'next/image';
+import heroImg from "@/assets/bazar-hero.png"
+
+const Banner = () => {
+    const date = new Date().toLocaleDateString("bn-BD", {
+        dateStyle: "full"
+    })
+    return (
+        <div className="bg-[#fafcfa] border border-[#e1e8e1] rounded-3xl mx-3.5 md:mt-8 mt-5 md:mx-6 lg:mx-0 ">
+            <div className="flex flex-col md:flex-row-reverse justify-between">
+                <div className="flex justify-center md:block">
+                    <Image
+                        src={heroImg}
+                        alt='Hero-Image'
+                        width={315}
+                        height={0}
+                    />
+                </div>
+                <div className='ml-4'>
+                    <div className='text-[#05893e] bg-[#f0f5f0] rounded-xl md:mt-4 mt-8 w-44 py-1 flex justify-center text-sm'>{date}</div>
+                    <p className=" font-normal text-[#1d271f] text-base lg:w-xl md:w-92 min-[425px]:w-94 min-[375px]:w-78 md:mt-18 mt-10 md:mb-5.5 mb-4">
+                        চাল, ডাল, তেল, সবজি, মাছ, মাংস, ডিম ও মসলার দাম — বাজারভিত্তিক বিস্তারিত, গড়, সর্বনিম্ন-সর্বাধিক এবং দামের পরিবর্তন এক জায়গায়।
+                    </p>
+                    <button className="md:mb-12 mb-8 font-semibold text-[#f3fbf4]
+                                    md:text-base text-xs border border-[#047f39]
+                                    md:rounded-lg rounded-md bg-[#05893e] md:px-4 px-2 md:py-1.5 py-1.5
+                                    hover:bg-[#047832] hover:border-[#036b2d] hover:shadow-md
+                                    active:scale-97 transition-all duration-200 ease-out">সব পণ্য দেখুন</button>
+                </div>
+            </div>
+        </div>
+    );
+};
+
+export default Banner;
