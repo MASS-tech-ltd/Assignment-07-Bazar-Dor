@@ -14,15 +14,15 @@ const PriceIncreased = async () => {
     return (
         <div className="lg:mt-12 md:mt-10 mt-10 mx-3.5 md:mx-6 lg:mx-0">
             <h3 className="font-bold text-xl text-[#1d271f]"><span className="text-red-600 font-medium text-base">▲</span> আজ দাম বেড়েছে</h3>
-            <div className="grid lg:grid-cols-4 md:grid-cols-2 grid-cols-1 gap-4 lg:mt-4 md:mt-3 mt-3">
+            <div className="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-4 lg:mt-4 md:mt-3 mt-3">
                 {
                     allProducts.filter((product: allProductsDataTypes) => product.change.dir === "up")
-                        .map((product: allProductsDataTypes) =>
+                        .slice(0, 9).map((product: allProductsDataTypes) =>
                             <div
                                 key={product.id}
                                 className="bg-[#feffed] border border-[#C8D5C8] rounded-2xl transition-all duration-300 ease-out hover:border-[#05893e] hover:-translate-y-1 hover:shadow-md"
                             >
-                                <div className="p-4">
+                                <div className="lg:p-6 md:p-4 p-4">
                                     <div className="flex items-center">
                                         <div className="text-3xl ">{product.image}</div>
                                         <div className="ml-3">

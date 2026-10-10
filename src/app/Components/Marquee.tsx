@@ -31,7 +31,7 @@ const Marquee = async () => {
 
                         {product.change.dir === "down" && (
                             <span className="ml-1.5 text-green-600 font-medium text-sm">
-                                ▼ {Math.abs(product.change.pct)}%
+                                ▼ {Math.abs(product.change.pct).toLocaleString("bn-BD")}%
                             </span>
                         )}
 
