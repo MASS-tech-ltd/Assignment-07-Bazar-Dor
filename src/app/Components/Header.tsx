@@ -31,7 +31,7 @@ const Header = () => {
                                 className='text-center'
                                 src={Logo}
                                 alt='LOGO'
-                                width={0}
+                                width={20}
                                 height={0}
                             ></Image>
                         </div>

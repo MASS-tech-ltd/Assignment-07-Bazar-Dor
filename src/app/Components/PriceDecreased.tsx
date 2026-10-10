@@ -1,8 +1,15 @@
 import allProductsDataTypes from "../allProductsDataTypes";
 
 const PriceDecreased = async () => {
-    const res = await fetch("https://openapi.programming-hero.com/api/bazardor/products")
-    const allProducts = await res.json();
+    const res = await fetch(
+        "https://openapi.programming-hero.com/api/bazardor/products"
+    );
+
+    if (!res.ok) {
+        throw new Error("Products fetch failed");
+    }
+
+    const allProducts: allProductsDataTypes[] = await res.json();
 
     const unitNames: Record<string, string> = {
         kg: "কেজি",
@@ -11,7 +18,7 @@ const PriceDecreased = async () => {
         piece: "টি",
     };
     return (
-        <div className="lg:mt-12 md:mt-10 mt-10 mx-3.5 md:mx-6 lg:mx-0">
+        <div className="lg:mt-14 md:mt-12 mt-12 mx-3.5 md:mx-6 lg:mx-0">
             <h3 className="font-bold text-xl text-[#1d271f]"><span className="text-green-600 font-medium text-base">▼</span> আজ দাম কমেছে</h3>
             <div className="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-4 lg:mt-4 md:mt-3 mt-3">
                 {
