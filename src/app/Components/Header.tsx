@@ -2,6 +2,8 @@ import Image from 'next/image';
 import Logo from "@/assets/logo-icon.png"
 import Navlinks from './Navlinks';
 import Link from 'next/link';
+import Marquee from './Marquee';
+
 
 const Header = () => {
     const date = new Date().toLocaleDateString("bn-BD", {
@@ -70,6 +72,8 @@ const Header = () => {
                     <Navlinks></Navlinks>
                 </ul>
             </div>
+            <div className='border-t border-[#D5DDD5]'></div>
+            <Marquee></Marquee>
         </div>
     );
 };
