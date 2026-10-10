@@ -1,5 +1,7 @@
 import Image from 'next/image';
 import Logo from "@/assets/logo-icon.png"
+import Navlinks from './Navlinks';
+import Link from 'next/link';
 
 const Header = () => {
     const date = new Date().toLocaleDateString("bn-BD", {
@@ -16,24 +18,27 @@ const Header = () => {
                         </div>
                         <ul
                             tabIndex={-1}
-                            className="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow">
-                            <li><a>guuuuuuuuuuuuu</a></li>
-                            <li><a>Item 3</a></li>
+                            className="menu menu-sm dropdown-content border border-[#C8E6D0] bg-[#E8F5EC] rounded-box z-1 mt-3 md:w-40 w-35 p-2 shadow">
+                            <Navlinks></Navlinks>
                         </ul>
                     </div>
-                    <div className='rounded-xl bg-[#05893e] md:w-11  md:h-11 min-[425px]:w-11 min-[425px]:h-11 min-[375px]:w-10 min-[375px]:h-10   flex justify-center items-center'>
-                        <Image
-                            className='text-center'
-                            src={Logo}
-                            alt='LOGO'
-                            width={0}
-                            height={0}
-                        ></Image>
-                    </div>
-                    <div className='ml-2'>
-                        <h2 className='font-bold text-[#1d271f] md:text-xl min-[425px]:text-lg min-[375px]:text-base'>বাজার দর</h2>
-                        <div className='font-normal md:text-xs min-[425px]:text-[9px] min-[375px]:text-[7px] text-[#1d271f]'>{date}</div>
-                    </div>
+                    <Link href={"/"}>
+                        <div className='flex'>
+                            <div className='rounded-xl bg-[#05893e] md:w-11  md:h-11 min-[425px]:w-11 min-[425px]:h-11 min-[375px]:w-10 min-[375px]:h-10   flex justify-center items-center'>
+                            <Image
+                                className='text-center'
+                                src={Logo}
+                                alt='LOGO'
+                                width={0}
+                                height={0}
+                            ></Image>
+                        </div>
+                        <div className='ml-2'>
+                            <h2 className='font-bold text-[#1d271f] md:text-xl min-[425px]:text-lg min-[375px]:text-base'>বাজার দর</h2>
+                            <div className='font-normal md:text-xs min-[425px]:text-[9px] min-[375px]:text-[7px] text-[#1d271f]'>{date}</div>
+                        </div>
+                        </div>
+                    </Link>
                 </div>
 
                 <div className="navbar-end md:mr-5 lg:mr-0 mr-1.5">
@@ -42,7 +47,7 @@ const Header = () => {
                                     bg-base-200 md:rounded-lg rounded-md mr-2 md:px-3 px-2 md:py-1.5 py-1.5
                                     hover:bg-base-300 hover:shadow-sm
                                     active:scale-97 transition-all duration-200 ease-out"
-                        >
+                    >
                         সাইন ইন
                     </button>
 
@@ -52,7 +57,7 @@ const Header = () => {
                                     md:rounded-lg rounded-md bg-[#05893e] md:px-3 px-2 md:py-1.5 py-1.5
                                     hover:bg-[#047832] hover:border-[#036b2d] hover:shadow-md
                                     active:scale-97 transition-all duration-200 ease-out"
-                        >
+                    >
                         সাইন আপ
                     </button>
                 </div>
@@ -60,12 +65,11 @@ const Header = () => {
             </div>
             {/* Navlinks */}
 
-            {/* <div className="navbar-center hidden lg:flex">
+            <div className="hidden lg:flex pb-1 justify-center container mx-auto">
                 <ul className="menu menu-horizontal px-1">
-                    <li><a>da</a></li>
-                    <li><a>Item 3</a></li>
+                    <Navlinks></Navlinks>
                 </ul>
-            </div> */}
+            </div>
         </div>
     );
 };
