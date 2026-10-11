@@ -1,3 +1,4 @@
+import Link from "next/link";
 import allProductsDataTypes from "../allProductsDataTypes";
 
 
@@ -25,32 +26,34 @@ const PriceIncreased = async () => {
                 {
                     allProducts.filter((product: allProductsDataTypes) => product.change.dir === "up")
                         .slice(0, 9).map((product: allProductsDataTypes) =>
-                            <div
-                                key={product.id}
-                                className="bg-[#FFFFF5] border border-[#C8D5C8] rounded-2xl transition-all duration-300 ease-out hover:border-[#05893e] hover:-translate-y-1 hover:shadow-md"
-                            >
-                                <div className="lg:p-6 md:p-4 p-4">
-                                    <div className="flex items-center">
-                                        <div className="text-3xl ">{product.image}</div>
-                                        <div className="ml-3">
-                                            <h3 className="font-semibold text-base text-[#1d271f]">{product.nameBn}</h3>
-                                            <p className="font-normal text-xs text-[#1d271f]">প্রতি {unitNames[product.unit] ?? product.unit}</p>
+                            <Link key={product.id} href={`/product/${product.id}`}>
+                                <div
+                                    key={product.id}
+                                    className="bg-[#FFFFF5] border border-[#C8D5C8] rounded-2xl transition-all duration-300 ease-out hover:border-[#05893e] hover:-translate-y-1 hover:shadow-md"
+                                >
+                                    <div className="lg:p-6 md:p-4 p-4">
+                                        <div className="flex items-center">
+                                            <div className="text-3xl ">{product.image}</div>
+                                            <div className="ml-3">
+                                                <h3 className="font-semibold text-base text-[#1d271f]">{product.nameBn}</h3>
+                                                <p className="font-normal text-xs text-[#1d271f]">প্রতি {unitNames[product.unit] ?? product.unit}</p>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div className="flex justify-between items-end mt-3">
-                                        <div>
-                                            <h5 className="font-normal text-xs text-[#1d271f]">আজকের দাম</h5>
-                                            <h2><span className="font-bold text-xl text-[#1d271f]">{product.today.toLocaleString("bn-BD")}</span> <span
-                                                className="font-medium text-sm text-[#1d271f]">টাকা</span></h2>
-                                        </div>
-                                        <div className="bg-red-100 rounded-xl px-1.5">
-                                            <span className="text-red-600 font-medium text-sm">
-                                                ▲ {product.change.pct.toLocaleString("bn-BD")}%
-                                            </span>
+                                        <div className="flex justify-between items-end mt-3">
+                                            <div>
+                                                <h5 className="font-normal text-xs text-[#1d271f]">আজকের দাম</h5>
+                                                <h2><span className="font-bold text-xl text-[#1d271f]">{product.today.toLocaleString("bn-BD")}</span> <span
+                                                    className="font-medium text-sm text-[#1d271f]">টাকা</span></h2>
+                                            </div>
+                                            <div className="bg-red-100 rounded-xl px-1.5">
+                                                <span className="text-red-600 font-medium text-sm">
+                                                    ▲ {product.change.pct.toLocaleString("bn-BD")}%
+                                                </span>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>)
+                            </Link>)
                 }
             </div>
         </div>
