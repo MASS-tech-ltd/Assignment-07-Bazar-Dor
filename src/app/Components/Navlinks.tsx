@@ -20,7 +20,7 @@ const Navlinks = async () => {
                     <li key={category.id}>
                         <Link
                             className="font-semibold lg:text-base md:text-sm text-sm text-[#1d271f]"
-                            href={category.slug}
+                            href={`/category/${category.slug}`}
                         >
                             {category.icon} {category.nameBn}
                         </Link>
