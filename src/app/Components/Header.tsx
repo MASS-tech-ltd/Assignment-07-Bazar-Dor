@@ -10,9 +10,9 @@ const Header = () => {
         dateStyle: "full"
     })
     return (
-        <div className=' border border-[#D5DDD5] bg-[#fafcfa]'>
+        <div className=' border border-[#D5DDD5] bg-[#fafcfa] sticky top-0 z-50'>
 
-            <div className="navbar container mx-auto">
+            <div className="navbar container mx-auto mt-2">
                 <div className="navbar-start">
                     <div className="dropdown">
                         <div tabIndex={0} role="button" className="btn btn-ghost lg:hidden">

@@ -23,7 +23,7 @@ const Marquee = async () => {
     };
     return (
         <MarqueeText direction="right" duration={20}>
-            <div className="py-1">
+            <div className="py-1 bg-red-50">
                 {
                     allProducts.map((product: allProductsDataTypes) => <span key={product.id}>
                         <span className="text-sm">{product.image}</span>
