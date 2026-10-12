@@ -3,6 +3,7 @@ import { Hind_Siliguri } from "next/font/google";
 import "./globals.css";
 import Header from "./Components/Header";
 import Footer from "./Components/Footer";
+import ToastProvider from "./Components/ToastProvider";
 
 const hindSiliguri = Hind_Siliguri({
   subsets: ["bengali", "latin"],
@@ -27,8 +28,9 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
     >
       <body className="min-h-full flex flex-col bg-[#F2F6F2]">
         <Header></Header>
-        <main>
+        <main className="flex-1">
           {children}
+          <ToastProvider />
         </main>
         <Footer></Footer>
       </body>

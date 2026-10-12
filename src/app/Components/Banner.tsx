@@ -22,11 +22,18 @@ const Banner = () => {
                     <p className=" font-normal text-[#1d271f] text-base lg:w-xl md:w-92 min-[425px]:w-94 min-[375px]:w-78 md:mt-5 mt-3 md:mb-5.5 mb-4">
                         চাল, ডাল, তেল, সবজি, মাছ, মাংস, ডিম ও মসলার দাম — বাজারভিত্তিক বিস্তারিত, গড়, সর্বনিম্ন-সর্বাধিক এবং দামের পরিবর্তন এক জায়গায়।
                     </p>
-                    <button className="md:mb-12 mb-8 font-semibold text-[#f3fbf4]
+                    <div className='md:mb-12 mb-10'>
+                        <a
+                            href='#all-products'
+                            className="md:mb-12 mb-8 font-semibold text-[#f3fbf4]
                                     md:text-base text-xs border border-[#047f39]
                                     md:rounded-lg rounded-md bg-[#05893e] md:px-4 px-2 md:py-1.5 py-1.5
                                     hover:bg-[#047832] hover:border-[#036b2d] hover:shadow-md
-                                    active:scale-97 transition-all duration-200 ease-out">সব পণ্য দেখুন</button>
+                                    active:scale-97 transition-all duration-200 ease-out"
+                        >
+                            সব পণ্য দেখুন
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>

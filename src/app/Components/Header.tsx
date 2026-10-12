@@ -27,41 +27,45 @@ const Header = () => {
                     <Link href={"/"}>
                         <div className='flex'>
                             <div className='rounded-xl bg-[#05893e] md:w-11  md:h-11 min-[425px]:w-11 min-[425px]:h-11 min-[375px]:w-10 min-[375px]:h-10   flex justify-center items-center'>
-                            <Image
-                                className='text-center'
-                                src={Logo}
-                                alt='LOGO'
-                                width={20}
-                                height={0}
-                            ></Image>
-                        </div>
-                        <div className='ml-2'>
-                            <h2 className='font-bold text-[#1d271f] md:text-xl min-[425px]:text-lg min-[375px]:text-base'>বাজার দর</h2>
-                            <div className='font-normal md:text-xs min-[425px]:text-[9px] min-[375px]:text-[7px] text-[#1d271f]'>{date}</div>
-                        </div>
+                                <Image
+                                    className='text-center'
+                                    src={Logo}
+                                    alt='LOGO'
+                                    width={20}
+                                    height={0}
+                                ></Image>
+                            </div>
+                            <div className='ml-2'>
+                                <h2 className='font-bold text-[#1d271f] md:text-xl min-[425px]:text-lg min-[375px]:text-base'>বাজার দর</h2>
+                                <div className='font-normal md:text-xs min-[425px]:text-[9px] min-[375px]:text-[7px] text-[#1d271f]'>{date}</div>
+                            </div>
                         </div>
                     </Link>
                 </div>
 
                 <div className="navbar-end md:mr-5 lg:mr-0 mr-1.5">
-                    <button
-                        className="font-semibold text-[#1d271f] md:text-base text-xs
+                    <Link href="/sign-in">
+                        <button
+                            className="font-semibold text-[#1d271f] md:text-base text-xs
                                     bg-base-200 md:rounded-lg rounded-md mr-2 md:px-3 px-2 md:py-1.5 py-1.5
                                     hover:bg-base-300 hover:shadow-sm
                                     active:scale-97 transition-all duration-200 ease-out"
-                    >
-                        সাইন ইন
-                    </button>
+                        >
+                            সাইন ইন
+                        </button>
+                    </Link>
 
-                    <button
-                        className="font-semibold text-[#f3fbf4]
+                    <Link href="/sign-up">
+                        <button
+                            className="font-semibold text-[#f3fbf4]
                                     md:text-base text-xs border border-[#047f39]
                                     md:rounded-lg rounded-md bg-[#05893e] md:px-3 px-2 md:py-1.5 py-1.5
                                     hover:bg-[#047832] hover:border-[#036b2d] hover:shadow-md
                                     active:scale-97 transition-all duration-200 ease-out"
-                    >
-                        সাইন আপ
-                    </button>
+                        >
+                            সাইন আপ
+                        </button>
+                    </Link>
                 </div>
 
             </div>
