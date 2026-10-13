@@ -1,9 +1,110 @@
+"use client";
+import { authClient } from "@/lib/auth-client";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { Bounce, toast } from "react-toastify";
+import { useState } from "react";
 
 const SignInPage = () => {
+    const router = useRouter();
+
+    const [emailError, setEmailError] = useState(false);
+    const [passwordError, setPasswordError] = useState(false);
+
+    const handleLoginSubmit = async (e: React.SubmitEvent<HTMLFormElement>) => {
+        e.preventDefault();
+
+        const loginData = new FormData(e.currentTarget);
+
+        const email = String(loginData.get("email") ?? "").trim();
+        const password = String(loginData.get("password") ?? "");
+
+        setEmailError(!email);
+        setPasswordError(!password);
+
+        if (!email || !password) {
+            return;
+        }
+
+        const user = Object.fromEntries(loginData.entries()) as {
+            email: string;
+            password: string;
+        };
+
+        console.log(user);
+
+        const { data, error } = await authClient.signIn.email({
+            ...user,
+            callbackURL: "/"
+        });
+
+        if (data) {
+            toast.success("সাইন ইন সফল হয়েছে!", {
+                position: "top-right",
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: false,
+                pauseOnHover: true,
+                draggable: true,
+                theme: "dark",
+                transition: Bounce,
+            });
+            router.push("/");
+        }
+
+        if (error) {
+            toast.error("ইমেইল অথবা পাসওয়ার্ড সঠিক নয় !", {
+                position: "top-right",
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: false,
+                pauseOnHover: true,
+                draggable: true,
+                theme: "dark",
+                transition: Bounce,
+            });
+        }
+    };
+
+    // Google sign in part
+
+    const handleGoogleSignIn = async () => {
+        const { data, error } = await authClient.signIn.social({
+            provider: "google",
+            callbackURL: "/",
+        });
+
+        if (error) {
+            toast.error("Google দিয়ে সাইন ইন করা যায়নি!", {
+                position: "top-right",
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: false,
+                pauseOnHover: true,
+                draggable: true,
+                theme: "dark",
+                transition: Bounce,
+            });
+            return;
+        }
+
+        if (data) {
+            toast.success("Google সাইন ইন শুরু হয়েছে!", {
+                position: "top-right",
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: false,
+                pauseOnHover: true,
+                draggable: true,
+                theme: "dark",
+                transition: Bounce,
+            });
+        }
+    };
+
     return (
-        <main className="min-h-screen bg-[#f0f5f0] px-4 py-5 sm:px-6 sm:py-6 md:py-5">
-            <div className="mx-auto flex w-full max-w-[345px] flex-col items-center">
+        <main className="min-h-screen bg-[#f0f5f0] px-4 py-8 sm:px-6 sm:py-10">
+            <div className="mx-auto flex w-full md:max-w-[400px] max-w-[360px] flex-col items-center">
 
                 {/* Heading */}
                 <div className="mb-5 text-center">
@@ -11,7 +112,7 @@ const SignInPage = () => {
                         সাইন ইন
                     </h1>
 
-                    <p className="mt-1 text-xs leading-5 text-[#737b73]">
+                    <p className="mt-1 md:text-sm text-xs leading-5 text-[#737b73]">
                         বিস্তারিত দাম, বাজার তুলনা ও প্রাইস হিস্ট্রি দেখতে অ্যাকাউন্টে ঢুকুন।
                     </p>
                 </div>
@@ -20,56 +121,90 @@ const SignInPage = () => {
                 <div className="w-full rounded-2xl border border-[#dce7dc] bg-[#fbfdfb] p-5">
 
                     {/* Form Design */}
-                    <div className="space-y-3.5">
+                    <form onSubmit={handleLoginSubmit}>
+                        <div className="space-y-3.5">
 
-                        {/* Email */}
-                        <div>
-                            <label
-                                htmlFor="email"
-                                className="mb-1.5 block text-xs font-medium text-[#1d271f]"
+                            {/* Email */}
+                            <div>
+                                <label
+                                    htmlFor="email"
+                                    className="mb-1.5 block text-sm font-medium text-[#1d271f]"
+                                >
+                                    ইমেইল
+                                </label>
+
+                                <input
+                                    id="email"
+                                    name="email"
+                                    type="email"
+                                    placeholder="you@example.com"
+                                    aria-invalid={emailError}
+                                    onChange={(e) => {
+                                        if (e.target.value.trim()) {
+                                            setEmailError(false);
+                                        }
+                                    }}
+                                    className={`h-[34px] w-full rounded-lg border ${emailError
+                                        ? "border-red-500 focus:border-red-500 focus:ring-red-500/10"
+                                        : "border-[#e0e5e0] focus:border-[#078744] focus:ring-[#078744]/10"
+                                        } bg-transparent px-3 text-xs text-[#1d271f] outline-none placeholder:text-[#626962] transition focus:ring-2`}
+                                />
+
+                                {emailError && (
+                                    <p className="mt-1 text-xs text-red-600">
+                                        ইমেইল পূরণ করুন।
+                                    </p>
+                                )}
+                            </div>
+
+                            {/* Password */}
+                            <div>
+                                <label
+                                    htmlFor="password"
+                                    className="mb-1.5 block text-sm font-medium text-[#1d271f]"
+                                >
+                                    পাসওয়ার্ড
+                                </label>
+
+                                <input
+                                    id="password"
+                                    name="password"
+                                    type="password"
+                                    placeholder="কমপক্ষে ৮ অক্ষর"
+                                    aria-invalid={passwordError}
+                                    onChange={(e) => {
+                                        if (e.target.value.length > 0) {
+                                            setPasswordError(false);
+                                        }
+                                    }}
+                                    className={`h-[34px] w-full rounded-lg border ${passwordError
+                                        ? "border-red-500 focus:border-red-500 focus:ring-red-500/10"
+                                        : "border-[#e0e5e0] focus:border-[#078744] focus:ring-[#078744]/10"
+                                        } bg-transparent px-3 text-xs text-[#1d271f] outline-none placeholder:text-[#626962] transition focus:ring-2`}
+                                />
+
+                                {passwordError && (
+                                    <p className="mt-1 text-xs text-red-600">
+                                        পাসওয়ার্ড পূরণ করুন।
+                                    </p>
+                                )}
+                            </div>
+
+                            {/* Sign In Button */}
+                            <button
+                                type="submit"
+                                className="h-[35px] w-full rounded-lg bg-[#078744] text-sm font-semibold text-white shadow-[0_2px_3px_rgba(0,0,0,0.2)] transition hover:bg-[#06763b] active:scale-[0.99]"
                             >
-                                ইমেইল
-                            </label>
-
-                            <input
-                                id="email"
-                                type="email"
-                                placeholder="you@example.com"
-                                className="h-[34px] w-full rounded-lg border border-[#e0e5e0] bg-transparent px-3 text-xs text-[#1d271f] outline-none placeholder:text-[#626962] transition focus:border-[#078744] focus:ring-2 focus:ring-[#078744]/10"
-                            />
+                                সাইন ইন
+                            </button>
                         </div>
-
-                        {/* Password */}
-                        <div>
-                            <label
-                                htmlFor="password"
-                                className="mb-1.5 block text-xs font-medium text-[#1d271f]"
-                            >
-                                পাসওয়ার্ড
-                            </label>
-
-                            <input
-                                id="password"
-                                type="password"
-                                placeholder="কমপক্ষে ৮ অক্ষর"
-                                className="h-[34px] w-full rounded-lg border border-[#e0e5e0] bg-transparent px-3 text-xs text-[#1d271f] outline-none placeholder:text-[#626962] transition focus:border-[#078744] focus:ring-2 focus:ring-[#078744]/10"
-                            />
-                        </div>
-
-                        {/* Sign In Button */}
-                        <button
-                            type="button"
-                            className="h-[35px] w-full rounded-lg bg-[#078744] text-xs font-semibold text-white shadow-[0_2px_3px_rgba(0,0,0,0.2)] transition hover:bg-[#06763b] active:scale-[0.99]"
-                        >
-                            সাইন ইন
-                        </button>
-                    </div>
+                    </form>
 
                     {/* Divider */}
                     <div className="my-3.5 flex items-center gap-3">
                         <div className="h-px flex-1 bg-[#dce2dc]" />
 
-                        <span className="text-[11px] text-[#525b52]">
+                        <span className="text-sm text-[#525b52]">
                             অথবা
                         </span>
 
@@ -81,8 +216,9 @@ const SignInPage = () => {
 
                         {/* Google Button */}
                         <button
+                            onClick={handleGoogleSignIn}
                             type="button"
-                            className="flex h-[34px] items-center justify-center gap-1.5 whitespace-nowrap rounded-lg border border-[#e0e5e0] px-2 text-[11px] font-semibold text-[#303630] transition hover:bg-[#f0f5f0]"
+                            className="flex h-[34px] items-center justify-center gap-1.5 whitespace-nowrap rounded-lg border border-[#e0e5e0] px-2 md:text-sm text-xs font-semibold text-[#303630] transition hover:bg-[#f0f5f0]"
                         >
                             <svg
                                 viewBox="0 0 48 48"
@@ -113,7 +249,7 @@ const SignInPage = () => {
                         {/* GitHub Button */}
                         <button
                             type="button"
-                            className="flex h-[34px] items-center justify-center gap-1.5 whitespace-nowrap rounded-lg border border-[#e0e5e0] px-2 text-[11px] font-semibold text-[#303630] transition hover:bg-[#f0f5f0]"
+                            className="flex h-[34px] items-center justify-center gap-1.5 whitespace-nowrap rounded-lg border border-[#e0e5e0] px-2 md:text-sm text-xs font-semibold text-[#303630] transition hover:bg-[#f0f5f0]"
                         >
                             <svg
                                 viewBox="0 0 24 24"
@@ -128,11 +264,11 @@ const SignInPage = () => {
                     </div>
 
                     {/* Sign Up Link */}
-                    <p className="mt-3.5 text-center text-xs text-[#454d45]">
+                    <p className="mt-3.5 text-center text-sm text-[#454d45]">
                         অ্যাকাউন্ট নেই?{" "}
                         <Link
-                            href="/signup"
-                            className="font-medium text-[#078744] hover:underline"
+                            href="/sign-up"
+                            className="font-semibold text-[#078744] hover:underline"
                         >
                             সাইন আপ করুন
                         </Link>
@@ -142,7 +278,7 @@ const SignInPage = () => {
                 {/* Back to Home */}
                 <Link
                     href="/"
-                    className="mt-5 text-xs text-[#7a827a] transition hover:text-[#078744]"
+                    className="mt-5 text-sm text-[#7a827a] transition hover:text-[#078744]"
                 >
                     ← হোম পেজে ফিরে যান
                 </Link>

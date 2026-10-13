@@ -3,6 +3,7 @@ import Logo from "@/assets/logo-icon.png"
 import Navlinks from './Navlinks';
 import Link from 'next/link';
 import Marquee from './Marquee';
+import UserInfo from './UserInfo';
 
 
 const Header = () => {
@@ -44,28 +45,7 @@ const Header = () => {
                 </div>
 
                 <div className="navbar-end md:mr-5 lg:mr-0 mr-1.5">
-                    <Link href="/sign-in">
-                        <button
-                            className="font-semibold text-[#1d271f] md:text-base text-xs
-                                    bg-base-200 md:rounded-lg rounded-md mr-2 md:px-3 px-2 md:py-1.5 py-1.5
-                                    hover:bg-base-300 hover:shadow-sm
-                                    active:scale-97 transition-all duration-200 ease-out"
-                        >
-                            সাইন ইন
-                        </button>
-                    </Link>
-
-                    <Link href="/sign-up">
-                        <button
-                            className="font-semibold text-[#f3fbf4]
-                                    md:text-base text-xs border border-[#047f39]
-                                    md:rounded-lg rounded-md bg-[#05893e] md:px-3 px-2 md:py-1.5 py-1.5
-                                    hover:bg-[#047832] hover:border-[#036b2d] hover:shadow-md
-                                    active:scale-97 transition-all duration-200 ease-out"
-                        >
-                            সাইন আপ
-                        </button>
-                    </Link>
+                    <UserInfo></UserInfo>
                 </div>
 
             </div>

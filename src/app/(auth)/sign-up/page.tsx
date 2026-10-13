@@ -1,6 +1,4 @@
-
 "use client";
-
 import { authClient } from "@/lib/auth-client";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -17,7 +15,7 @@ const SignupPage = () => {
     confirmPassword: "",
   });
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     const signUpData = new FormData(e.currentTarget);
@@ -128,9 +126,45 @@ const SignupPage = () => {
     }
   };
 
+  // Google sign in part
+
+  const handleGoogleSignIn = async () => {
+    const { data, error } = await authClient.signIn.social({
+      provider: "google",
+      callbackURL: "/",
+    });
+
+    if (error) {
+      toast.error("Google দিয়ে সাইন ইন করা যায়নি!", {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: false,
+        pauseOnHover: true,
+        draggable: true,
+        theme: "dark",
+        transition: Bounce,
+      });
+      return;
+    }
+
+    if (data) {
+      toast.success("Google সাইন ইন শুরু হয়েছে!", {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: false,
+        pauseOnHover: true,
+        draggable: true,
+        theme: "dark",
+        transition: Bounce,
+      });
+    }
+  };
+
   return (
     <main className="min-h-screen bg-[#f0f5f0] px-4 py-8 sm:px-6 sm:py-10">
-      <div className="mx-auto flex w-full max-w-[360px] flex-col items-center">
+      <div className="mx-auto flex w-full md:max-w-[400px] max-w-[360px] flex-col items-center">
 
         {/* Heading */}
         <div className="mb-6 text-center">
@@ -138,7 +172,7 @@ const SignupPage = () => {
             অ্যাকাউন্ট তৈরি করুন
           </h1>
 
-          <p className="mt-1 text-xs text-[#737b73]">
+          <p className="mt-1 text-sm text-[#737b73]">
             বিনা খরচে সাইন আপ করে সব বিস্তারিত দাম দেখুন।
           </p>
         </div>
@@ -153,7 +187,7 @@ const SignupPage = () => {
               <div>
                 <label
                   htmlFor="name"
-                  className="mb-1.5 block text-xs font-medium text-[#1d271f]"
+                  className="mb-1.5 block text-sm font-medium text-[#1d271f]"
                 >
                   নাম
                 </label>
@@ -168,11 +202,10 @@ const SignupPage = () => {
                   onChange={() =>
                     setErrors((prev) => ({ ...prev, name: "" }))
                   }
-                  className={`h-9 w-full rounded-lg border bg-transparent px-3 text-xs text-[#1d271f] outline-none placeholder:text-[#626962] focus:ring-2 focus:ring-[#078744]/10 ${
-                    errors.name
-                      ? "border-red-500 focus:border-red-500 focus:ring-red-500/10"
-                      : "border-[#e0e5e0] focus:border-[#078744]"
-                  }`}
+                  className={`h-9 w-full rounded-lg border bg-transparent px-3 text-xs text-[#1d271f] outline-none placeholder:text-[#626962] focus:ring-2 focus:ring-[#078744]/10 ${errors.name
+                    ? "border-red-500 focus:border-red-500 focus:ring-red-500/10"
+                    : "border-[#e0e5e0] focus:border-[#078744]"
+                    }`}
                 />
 
                 {errors.name && (
@@ -186,7 +219,7 @@ const SignupPage = () => {
               <div>
                 <label
                   htmlFor="email"
-                  className="mb-1.5 block text-xs font-medium text-[#1d271f]"
+                  className="mb-1.5 block text-sm font-medium text-[#1d271f]"
                 >
                   ইমেইল
                 </label>
@@ -201,11 +234,10 @@ const SignupPage = () => {
                   onChange={() =>
                     setErrors((prev) => ({ ...prev, email: "" }))
                   }
-                  className={`h-9 w-full rounded-lg border bg-transparent px-3 text-xs text-[#1d271f] outline-none placeholder:text-[#626962] focus:ring-2 focus:ring-[#078744]/10 ${
-                    errors.email
-                      ? "border-red-500 focus:border-red-500 focus:ring-red-500/10"
-                      : "border-[#e0e5e0] focus:border-[#078744]"
-                  }`}
+                  className={`h-9 w-full rounded-lg border bg-transparent px-3 text-xs text-[#1d271f] outline-none placeholder:text-[#626962] focus:ring-2 focus:ring-[#078744]/10 ${errors.email
+                    ? "border-red-500 focus:border-red-500 focus:ring-red-500/10"
+                    : "border-[#e0e5e0] focus:border-[#078744]"
+                    }`}
                 />
 
                 {errors.email && (
@@ -219,7 +251,7 @@ const SignupPage = () => {
               <div>
                 <label
                   htmlFor="password"
-                  className="mb-1.5 block text-xs font-medium text-[#1d271f]"
+                  className="mb-1.5 block text-sm font-medium text-[#1d271f]"
                 >
                   পাসওয়ার্ড
                 </label>
@@ -236,11 +268,10 @@ const SignupPage = () => {
                   onChange={() =>
                     setErrors((prev) => ({ ...prev, password: "" }))
                   }
-                  className={`h-9 w-full rounded-lg border bg-transparent px-3 text-xs text-[#1d271f] outline-none placeholder:text-[#626962] focus:ring-2 focus:ring-[#078744]/10 ${
-                    errors.password
-                      ? "border-red-500 focus:border-red-500 focus:ring-red-500/10"
-                      : "border-[#e0e5e0] focus:border-[#078744]"
-                  }`}
+                  className={`h-9 w-full rounded-lg border bg-transparent px-3 text-xs text-[#1d271f] outline-none placeholder:text-[#626962] focus:ring-2 focus:ring-[#078744]/10 ${errors.password
+                    ? "border-red-500 focus:border-red-500 focus:ring-red-500/10"
+                    : "border-[#e0e5e0] focus:border-[#078744]"
+                    }`}
                 />
 
                 {errors.password && (
@@ -254,7 +285,7 @@ const SignupPage = () => {
               <div>
                 <label
                   htmlFor="confirmPassword"
-                  className="mb-1.5 block text-xs font-medium text-[#1d271f]"
+                  className="mb-1.5 block text-sm font-medium text-[#1d271f]"
                 >
                   পাসওয়ার্ড নিশ্চিত করুন
                 </label>
@@ -276,11 +307,10 @@ const SignupPage = () => {
                       confirmPassword: "",
                     }))
                   }
-                  className={`h-9 w-full rounded-lg border bg-transparent px-3 text-xs text-[#1d271f] outline-none placeholder:text-[#626962] focus:ring-2 focus:ring-[#078744]/10 ${
-                    errors.confirmPassword
-                      ? "border-red-500 focus:border-red-500 focus:ring-red-500/10"
-                      : "border-[#e0e5e0] focus:border-[#078744]"
-                  }`}
+                  className={`h-9 w-full rounded-lg border bg-transparent px-3 text-xs text-[#1d271f] outline-none placeholder:text-[#626962] focus:ring-2 focus:ring-[#078744]/10 ${errors.confirmPassword
+                    ? "border-red-500 focus:border-red-500 focus:ring-red-500/10"
+                    : "border-[#e0e5e0] focus:border-[#078744]"
+                    }`}
                 />
 
                 {errors.confirmPassword && (
@@ -296,7 +326,7 @@ const SignupPage = () => {
               {/* Create Account Button */}
               <button
                 type="submit"
-                className="h-[37px] w-full rounded-lg bg-[#078744] text-xs font-semibold text-white shadow-[0_2px_3px_rgba(0,0,0,0.2)] transition hover:bg-[#06763b] active:scale-[0.99]"
+                className="h-[37px] w-full rounded-lg bg-[#078744] text-sm font-semibold text-white shadow-[0_2px_3px_rgba(0,0,0,0.2)] transition hover:bg-[#06763b] active:scale-[0.99]"
               >
                 অ্যাকাউন্ট তৈরি করুন
               </button>
@@ -306,7 +336,7 @@ const SignupPage = () => {
           {/* Divider */}
           <div className="my-3.5 flex items-center gap-3">
             <div className="h-px flex-1 bg-[#dce2dc]" />
-            <span className="text-[11px] text-[#525b52]">
+            <span className="text-xs text-[#525b52]">
               অথবা
             </span>
             <div className="h-px flex-1 bg-[#dce2dc]" />
@@ -317,8 +347,9 @@ const SignupPage = () => {
 
             {/* Google */}
             <button
+              onClick={handleGoogleSignIn}
               type="button"
-              className="flex h-[35px] items-center justify-center gap-1.5 whitespace-nowrap rounded-lg border border-[#e0e5e0] px-2 text-[11px] font-semibold text-[#303630] transition hover:bg-[#f0f5f0]"
+              className="flex h-[35px] items-center justify-center gap-1.5 whitespace-nowrap rounded-lg border border-[#e0e5e0] md:text-sm text-xs font-semibold text-[#303630] transition hover:bg-[#f0f5f0]"
             >
               <svg
                 viewBox="0 0 48 48"
@@ -349,7 +380,7 @@ const SignupPage = () => {
             {/* GitHub */}
             <button
               type="button"
-              className="flex h-[35px] items-center justify-center gap-1.5 whitespace-nowrap rounded-lg border border-[#e0e5e0] px-2 text-[11px] font-semibold text-[#303630] transition hover:bg-[#f0f5f0]"
+              className="flex h-[35px] items-center justify-center gap-1.5 whitespace-nowrap rounded-lg border border-[#e0e5e0] md:text-sm text-xs font-semibold text-[#303630] transition hover:bg-[#f0f5f0]"
             >
               <svg
                 viewBox="0 0 24 24"
@@ -364,11 +395,11 @@ const SignupPage = () => {
           </div>
 
           {/* Sign In */}
-          <p className="mt-4 text-center text-xs text-[#454d45]">
+          <p className="mt-4 text-center text-sm text-[#454d45]">
             অ্যাকাউন্ট আছে?{" "}
             <Link
-              href="/login"
-              className="font-medium text-[#078744] hover:underline"
+              href="/sign-in"
+              className="font-semibold text-[#078744] hover:underline"
             >
               সাইন ইন করুন
             </Link>
@@ -378,7 +409,7 @@ const SignupPage = () => {
         {/* Back Home */}
         <Link
           href="/"
-          className="mt-5 text-xs text-[#7a827a] transition hover:text-[#078744]"
+          className="mt-5 text-sm text-[#7a827a] transition hover:text-[#078744]"
         >
           ← হোম পেজে ফিরে যান
         </Link>
