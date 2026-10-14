@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import userIcon from "@/assets/user.png";
 import { FiLogOut, FiUser } from "react-icons/fi";
+import { Bounce, toast } from "react-toastify";
 
 const UserInfo = () => {
     const { data: session } = authClient.useSession();
@@ -17,7 +18,17 @@ const UserInfo = () => {
     const handleSignOut = async () => {
         await authClient.signOut();
         setIsDropdownOpen(false);
-        router.refresh();
+        router.push("/");
+        toast.info("আপনি সফলভাবে সাইন আউট করেছেন!", {
+            position: "top-right",
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: false,
+            pauseOnHover: true,
+            draggable: true,
+            theme: "dark",
+            transition: Bounce,
+        });
     };
 
     return (
@@ -36,7 +47,7 @@ const UserInfo = () => {
                         {/* User avatar */}
                         <div className="avatar">
                             <div className="md:w-8 w-6 rounded-full ring-2
-                            ring-primary ring-offset-2 ring-offset-base-100">
+                            ring-emerald-700 ring-offset-2 ring-offset-base-100">
                                 <Image
                                     src={userIcon}
                                     alt="user-icon"

@@ -1,9 +1,11 @@
+
 "use client";
+
 import { authClient } from "@/lib/auth-client";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Bounce, toast } from "react-toastify";
-import { useState } from "react";
+import { useState, type FormEvent } from "react";
 
 const SignInPage = () => {
     const router = useRouter();
@@ -11,8 +13,16 @@ const SignInPage = () => {
     const [emailError, setEmailError] = useState(false);
     const [passwordError, setPasswordError] = useState(false);
 
-    const handleLoginSubmit = async (e: React.SubmitEvent<HTMLFormElement>) => {
+    // Sign In button loading state
+    const [isSigningIn, setIsSigningIn] = useState(false);
+
+    const handleLoginSubmit = async (
+        e: FormEvent<HTMLFormElement>
+    ) => {
         e.preventDefault();
+
+        // Prevent multiple submissions
+        if (isSigningIn) return;
 
         const loginData = new FormData(e.currentTarget);
 
@@ -26,22 +36,51 @@ const SignInPage = () => {
             return;
         }
 
-        const user = Object.fromEntries(loginData.entries()) as {
-            email: string;
-            password: string;
+        const user = {
+            email,
+            password,
         };
 
-        console.log(user);
+        setIsSigningIn(true);
 
-        const { data, error } = await authClient.signIn.email({
-            ...user,
-            callbackURL: "/"
-        });
+        try {
+            const { data, error } = await authClient.signIn.email({
+                ...user,
+                callbackURL: "/",
+            });
 
-        if (data) {
-            toast.success("সাইন ইন সফল হয়েছে!", {
+            if (error) {
+                toast.error("ইমেইল অথবা পাসওয়ার্ড সঠিক নয় !", {
+                    position: "top-right",
+                    autoClose: 2000,
+                    hideProgressBar: false,
+                    closeOnClick: false,
+                    pauseOnHover: true,
+                    draggable: true,
+                    theme: "dark",
+                    transition: Bounce,
+                });
+                return;
+            }
+
+            if (data) {
+                toast.success("সাইন ইন সফল হয়েছে!", {
+                    position: "top-right",
+                    autoClose: 2000,
+                    hideProgressBar: false,
+                    closeOnClick: false,
+                    pauseOnHover: true,
+                    draggable: true,
+                    theme: "dark",
+                    transition: Bounce,
+                });
+
+                router.push("/");
+            }
+        } catch {
+            toast.error("সাইন ইন করতে সমস্যা হয়েছে!", {
                 position: "top-right",
-                autoClose: 3000,
+                autoClose: 2000,
                 hideProgressBar: false,
                 closeOnClick: false,
                 pauseOnHover: true,
@@ -49,25 +88,12 @@ const SignInPage = () => {
                 theme: "dark",
                 transition: Bounce,
             });
-            router.push("/");
-        }
-
-        if (error) {
-            toast.error("ইমেইল অথবা পাসওয়ার্ড সঠিক নয় !", {
-                position: "top-right",
-                autoClose: 3000,
-                hideProgressBar: false,
-                closeOnClick: false,
-                pauseOnHover: true,
-                draggable: true,
-                theme: "dark",
-                transition: Bounce,
-            });
+        } finally {
+            setIsSigningIn(false);
         }
     };
 
-    // Google sign in part
-
+    // Google sign in part (unchanged)
     const handleGoogleSignIn = async () => {
         const { data, error } = await authClient.signIn.social({
             provider: "google",
@@ -77,7 +103,7 @@ const SignInPage = () => {
         if (error) {
             toast.error("Google দিয়ে সাইন ইন করা যায়নি!", {
                 position: "top-right",
-                autoClose: 3000,
+                autoClose: 2000,
                 hideProgressBar: false,
                 closeOnClick: false,
                 pauseOnHover: true,
@@ -91,7 +117,42 @@ const SignInPage = () => {
         if (data) {
             toast.success("Google সাইন ইন শুরু হয়েছে!", {
                 position: "top-right",
-                autoClose: 3000,
+                autoClose: 2000,
+                hideProgressBar: false,
+                closeOnClick: false,
+                pauseOnHover: true,
+                draggable: true,
+                theme: "dark",
+                transition: Bounce,
+            });
+        }
+    };
+
+    // Github sign in part (unchanged)
+    const handleGithubSignIn = async () => {
+        const { data, error } = await authClient.signIn.social({
+            provider: "github",
+            callbackURL: "/",
+        });
+
+        if (error) {
+            toast.error("Github দিয়ে সাইন ইন করা যায়নি!", {
+                position: "top-right",
+                autoClose: 2000,
+                hideProgressBar: false,
+                closeOnClick: false,
+                pauseOnHover: true,
+                draggable: true,
+                theme: "dark",
+                transition: Bounce,
+            });
+            return;
+        }
+
+        if (data) {
+            toast.success("Github সাইন ইন শুরু হয়েছে!", {
+                position: "top-right",
+                autoClose: 2000,
                 hideProgressBar: false,
                 closeOnClick: false,
                 pauseOnHover: true,
@@ -139,14 +200,15 @@ const SignInPage = () => {
                                     type="email"
                                     placeholder="you@example.com"
                                     aria-invalid={emailError}
+                                    disabled={isSigningIn}
                                     onChange={(e) => {
                                         if (e.target.value.trim()) {
                                             setEmailError(false);
                                         }
                                     }}
                                     className={`h-[34px] w-full rounded-lg border ${emailError
-                                        ? "border-red-500 focus:border-red-500 focus:ring-red-500/10"
-                                        : "border-[#e0e5e0] focus:border-[#078744] focus:ring-[#078744]/10"
+                                            ? "border-red-500 focus:border-red-500 focus:ring-red-500/10"
+                                            : "border-[#e0e5e0] focus:border-[#078744] focus:ring-[#078744]/10"
                                         } bg-transparent px-3 text-xs text-[#1d271f] outline-none placeholder:text-[#626962] transition focus:ring-2`}
                                 />
 
@@ -172,14 +234,15 @@ const SignInPage = () => {
                                     type="password"
                                     placeholder="কমপক্ষে ৮ অক্ষর"
                                     aria-invalid={passwordError}
+                                    disabled={isSigningIn}
                                     onChange={(e) => {
                                         if (e.target.value.length > 0) {
                                             setPasswordError(false);
                                         }
                                     }}
                                     className={`h-[34px] w-full rounded-lg border ${passwordError
-                                        ? "border-red-500 focus:border-red-500 focus:ring-red-500/10"
-                                        : "border-[#e0e5e0] focus:border-[#078744] focus:ring-[#078744]/10"
+                                            ? "border-red-500 focus:border-red-500 focus:ring-red-500/10"
+                                            : "border-[#e0e5e0] focus:border-[#078744] focus:ring-[#078744]/10"
                                         } bg-transparent px-3 text-xs text-[#1d271f] outline-none placeholder:text-[#626962] transition focus:ring-2`}
                                 />
 
@@ -190,12 +253,17 @@ const SignInPage = () => {
                                 )}
                             </div>
 
-                            {/* Sign In Button */}
+                            {/* Sign In Button with Loading */}
                             <button
                                 type="submit"
-                                className="h-[35px] w-full rounded-lg bg-[#078744] text-sm font-semibold text-white shadow-[0_2px_3px_rgba(0,0,0,0.2)] transition hover:bg-[#06763b] active:scale-[0.99]"
+                                disabled={isSigningIn}
+                                className="flex h-[35px] w-full items-center justify-center gap-2 rounded-lg bg-[#078744] text-sm font-semibold text-white shadow-[0_2px_3px_rgba(0,0,0,0.2)] transition hover:bg-[#06763b] active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-70"
                             >
-                                সাইন ইন
+                                {isSigningIn && (
+                                    <span className="loading loading-spinner loading-sm"></span>
+                                )}
+
+                                {isSigningIn ? "সাইন ইন হচ্ছে..." : "সাইন ইন"}
                             </button>
                         </div>
                     </form>
@@ -248,6 +316,7 @@ const SignInPage = () => {
 
                         {/* GitHub Button */}
                         <button
+                            onClick={handleGithubSignIn}
                             type="button"
                             className="flex h-[34px] items-center justify-center gap-1.5 whitespace-nowrap rounded-lg border border-[#e0e5e0] px-2 md:text-sm text-xs font-semibold text-[#303630] transition hover:bg-[#f0f5f0]"
                         >

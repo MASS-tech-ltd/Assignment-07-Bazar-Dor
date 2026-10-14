@@ -1,4 +1,6 @@
+
 "use client";
+
 import { authClient } from "@/lib/auth-client";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -15,8 +17,14 @@ const SignupPage = () => {
     confirmPassword: "",
   });
 
-  const handleSubmit = async (e: React.SubmitEvent<HTMLFormElement>) => {
+  // Sign Up button loading state
+  const [isSigningUp, setIsSigningUp] = useState(false);
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
+    // Prevent duplicate submissions
+    if (isSigningUp) return;
 
     const signUpData = new FormData(e.currentTarget);
 
@@ -64,10 +72,12 @@ const SignupPage = () => {
 
     setErrors(newErrors);
 
-    // কোনো Validation Error থাকলে API Call হবে না
+    // 
     if (Object.values(newErrors).some(Boolean)) {
       return;
     }
+
+    setIsSigningUp(true);
 
     try {
       const { data, error } = await authClient.signUp.email({
@@ -82,7 +92,7 @@ const SignupPage = () => {
           "এই ইমেইলটি আগে থেকেই ব্যবহৃত! অন্য ইমেইল ব্যবহার করুন।",
           {
             position: "top-right",
-            autoClose: 3000,
+            autoClose: 2000,
             hideProgressBar: false,
             closeOnClick: false,
             pauseOnHover: true,
@@ -96,9 +106,10 @@ const SignupPage = () => {
       }
 
       if (data) {
+        await authClient.signOut();
         toast.success("অ্যাকাউন্ট তৈরি সফল হয়েছে!", {
           position: "top-right",
-          autoClose: 3000,
+          autoClose: 2000,
           hideProgressBar: false,
           closeOnClick: false,
           pauseOnHover: true,
@@ -106,12 +117,12 @@ const SignupPage = () => {
           theme: "dark",
           transition: Bounce,
         });
+        router.push("/sign-in");
 
-        router.push("/");
       } else {
         toast.error("অ্যাকাউন্ট তৈরি করা যায়নি। আবার চেষ্টা করুন।", {
           position: "top-right",
-          autoClose: 3000,
+          autoClose: 2000,
           theme: "dark",
           transition: Bounce,
         });
@@ -119,15 +130,16 @@ const SignupPage = () => {
     } catch {
       toast.error("কিছু সমস্যা হয়েছে। আবার চেষ্টা করুন।", {
         position: "top-right",
-        autoClose: 3000,
+        autoClose: 2000,
         theme: "dark",
         transition: Bounce,
       });
+    } finally {
+      setIsSigningUp(false);
     }
   };
 
   // Google sign in part
-
   const handleGoogleSignIn = async () => {
     const { data, error } = await authClient.signIn.social({
       provider: "google",
@@ -137,7 +149,7 @@ const SignupPage = () => {
     if (error) {
       toast.error("Google দিয়ে সাইন ইন করা যায়নি!", {
         position: "top-right",
-        autoClose: 3000,
+        autoClose: 2000,
         hideProgressBar: false,
         closeOnClick: false,
         pauseOnHover: true,
@@ -151,7 +163,42 @@ const SignupPage = () => {
     if (data) {
       toast.success("Google সাইন ইন শুরু হয়েছে!", {
         position: "top-right",
-        autoClose: 3000,
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: false,
+        pauseOnHover: true,
+        draggable: true,
+        theme: "dark",
+        transition: Bounce,
+      });
+    }
+  };
+
+  // Github sign in part
+  const handleGithubSignIn = async () => {
+    const { data, error } = await authClient.signIn.social({
+      provider: "github",
+      callbackURL: "/",
+    });
+
+    if (error) {
+      toast.error("Github দিয়ে সাইন ইন করা যায়নি!", {
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: false,
+        pauseOnHover: true,
+        draggable: true,
+        theme: "dark",
+        transition: Bounce,
+      });
+      return;
+    }
+
+    if (data) {
+      toast.success("Github সাইন ইন শুরু হয়েছে!", {
+        position: "top-right",
+        autoClose: 2000,
         hideProgressBar: false,
         closeOnClick: false,
         pauseOnHover: true,
@@ -166,7 +213,6 @@ const SignupPage = () => {
     <main className="min-h-screen bg-[#f0f5f0] px-4 py-8 sm:px-6 sm:py-10">
       <div className="mx-auto flex w-full md:max-w-[400px] max-w-[360px] flex-col items-center">
 
-        {/* Heading */}
         <div className="mb-6 text-center">
           <h1 className="text-2xl font-bold leading-tight text-[#1d271f]">
             অ্যাকাউন্ট তৈরি করুন
@@ -177,7 +223,6 @@ const SignupPage = () => {
           </p>
         </div>
 
-        {/* Signup Card */}
         <div className="w-full rounded-2xl border border-[#dce7dc] bg-[#fbfdfb] p-5 sm:p-5">
 
           <form onSubmit={handleSubmit} noValidate>
@@ -323,12 +368,19 @@ const SignupPage = () => {
                 )}
               </div>
 
-              {/* Create Account Button */}
+              {/*Account Button*/}
               <button
                 type="submit"
-                className="h-[37px] w-full rounded-lg bg-[#078744] text-sm font-semibold text-white shadow-[0_2px_3px_rgba(0,0,0,0.2)] transition hover:bg-[#06763b] active:scale-[0.99]"
+                disabled={isSigningUp}
+                className="flex h-[37px] w-full items-center justify-center gap-2 rounded-lg bg-[#078744] text-sm font-semibold text-white shadow-[0_2px_3px_rgba(0,0,0,0.2)] transition hover:bg-[#06763b] active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-70"
               >
-                অ্যাকাউন্ট তৈরি করুন
+                {isSigningUp && (
+                  <span className="loading loading-spinner loading-sm"></span>
+                )}
+
+                {isSigningUp
+                  ? "অ্যাকাউন্ট তৈরি হচ্ছে..."
+                  : "অ্যাকাউন্ট তৈরি করুন"}
               </button>
             </div>
           </form>
@@ -379,6 +431,7 @@ const SignupPage = () => {
 
             {/* GitHub */}
             <button
+              onClick={handleGithubSignIn}
               type="button"
               className="flex h-[35px] items-center justify-center gap-1.5 whitespace-nowrap rounded-lg border border-[#e0e5e0] md:text-sm text-xs font-semibold text-[#303630] transition hover:bg-[#f0f5f0]"
             >
