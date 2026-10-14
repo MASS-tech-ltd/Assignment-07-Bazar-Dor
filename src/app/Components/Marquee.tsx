@@ -1,8 +1,8 @@
+
 import Link from "next/link";
 import allProductsDataTypes from "../allProductsDataTypes";
-import MarqueeText from "react-marquee-text"
-import "react-marquee-text/dist/styles.css"
-
+import MarqueeSpeed from "./MarqueeSpeed";
+import "react-marquee-text/dist/styles.css";
 
 const Marquee = async () => {
     const res = await fetch(
@@ -21,27 +21,53 @@ const Marquee = async () => {
         dozen: "ডজন",
         piece: "টি",
     };
+
     return (
-        <MarqueeText direction="right" duration={20}>
+        <MarqueeSpeed>
             <div className="py-1 bg-red-50">
-                {
-                    allProducts.map((product: allProductsDataTypes) => <Link key={product.id} href={`/product/${product.id}`}>
-                        <span key={product.id}>
-                            <span className="text-sm">{product.image}</span>
-                            <span className="hover:underline decoration-[#b1b0b0] underline-offset-4">
-                                <span className="font-medium text-sm ml-1.5 text-[#1d271f]">{product.nameBn}</span>
-                                <span className="ml-1.5">{product.today.toLocaleString("bn-BD")}</span>
-                                <span className="font-medium text-[#1d271f] ml-1.5">টাকা/{unitNames[product.unit] ?? product.unit}</span>
+                {allProducts.map((product: allProductsDataTypes) => (
+                    <Link
+                        key={product.id}
+                        href={`/product/${product.id}`}
+                    >
+                        <span>
+                            <span className="text-sm">
+                                {product.image}
                             </span>
+
+                            <span className="hover:underline decoration-[#b1b0b0] underline-offset-4">
+                                <span className="font-medium text-sm ml-1.5 text-[#1d271f]">
+                                    {product.nameBn}
+                                </span>
+
+                                <span className="ml-1.5">
+                                    {product.today.toLocaleString("bn-BD")}
+                                </span>
+
+                                <span className="font-medium text-[#1d271f] ml-1.5">
+                                    টাকা/
+                                    {unitNames[product.unit] ??
+                                        product.unit}
+                                </span>
+                            </span>
+
                             {product.change.dir === "up" && (
                                 <span className="ml-1.5 text-red-600 font-semibold text-sm">
-                                    ▲ {product.change.pct.toLocaleString("bn-BD")}%
+                                    ▲{" "}
+                                    {product.change.pct.toLocaleString(
+                                        "bn-BD"
+                                    )}
+                                    %
                                 </span>
                             )}
 
                             {product.change.dir === "down" && (
                                 <span className="ml-1.5 text-green-600 font-semibold text-sm">
-                                    ▼ {Math.abs(product.change.pct).toLocaleString("bn-BD")}%
+                                    ▼{" "}
+                                    {Math.abs(
+                                        product.change.pct
+                                    ).toLocaleString("bn-BD")}
+                                    %
                                 </span>
                             )}
 
@@ -50,13 +76,15 @@ const Marquee = async () => {
                                     — {Number(0).toLocaleString("bn-BD")}%
                                 </span>
                             )}
-                            <span className="mx-4 text-gray-500">●</span>
-                        </span>
-                    </Link>)
-                }
-            </div>
-        </MarqueeText>
 
+                            <span className="mx-4 text-gray-500">
+                                ●
+                            </span>
+                        </span>
+                    </Link>
+                ))}
+            </div>
+        </MarqueeSpeed>
     );
 };
 
