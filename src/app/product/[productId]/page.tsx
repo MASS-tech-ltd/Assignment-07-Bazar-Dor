@@ -1,17 +1,27 @@
 
 import allProductsDataTypes from "@/app/allProductsDataTypes";
+import { notFound } from "next/navigation";
 
 const page = async ({params}: {params: Promise<{ productId: string }>}) => {
-    
     const { productId } = await params;
 
-    const res = await fetch(`https://openapi.programming-hero.com/api/bazardor/products/${productId}`);
+    const res = await fetch(
+        `https://openapi.programming-hero.com/api/bazardor/products/${productId}`
+    );
+
+    if (res.status === 404) {
+        notFound();
+    }
 
     if (!res.ok) {
         throw new Error("Products fetch failed");
     }
 
-    const productData: allProductsDataTypes = await res.json();
+    const productData: allProductsDataTypes | null = await res.json();
+
+    if (!productData || !productData.nameBn) {
+        notFound();
+    }
 
     const unitNames: Record<string, string> = {
         kg: "কেজি",
@@ -23,13 +33,9 @@ const page = async ({params}: {params: Promise<{ productId: string }>}) => {
     // Calculate market prices
     const markets = productData.markets ?? [];
 
-    const allMinPrices = markets.map(
-        (market) => market.min
-    );
+    const allMinPrices = markets.map((market) => market.min);
 
-    const allMaxPrices = markets.map(
-        (market) => market.max
-    );
+    const allMaxPrices = markets.map((market) => market.max);
 
     const minPrice =
         markets.length > 0
@@ -85,7 +91,11 @@ const page = async ({params}: {params: Promise<{ productId: string }>}) => {
                                             গতকালের তুলনায় আজ দাম{" "}
                                             <span className="font-semibold">
                                                 বেড়েছে
-                                            </span>{" "} {(productData.today - productData.yesterday).toLocaleString("bn-BD")}{" "}
+                                            </span>{" "}
+                                            {(productData.today -
+                                                productData.yesterday).toLocaleString(
+                                                    "bn-BD"
+                                                )}{" "}
                                             টাকা
                                         </span>
                                     </div>
@@ -97,7 +107,11 @@ const page = async ({params}: {params: Promise<{ productId: string }>}) => {
                                             গতকালের তুলনায় আজ দাম{" "}
                                             <span className="font-semibold">
                                                 কমেছে
-                                            </span>{" "} {(productData.yesterday - productData.today).toLocaleString("bn-BD")}{" "}
+                                            </span>{" "}
+                                            {(productData.yesterday -
+                                                productData.today).toLocaleString(
+                                                    "bn-BD"
+                                                )}{" "}
                                             টাকা
                                         </span>
                                     </div>
@@ -245,7 +259,8 @@ const page = async ({params}: {params: Promise<{ productId: string }>}) => {
                                 </p>
 
                                 <h3 className="mt-1 text-2xl font-bold text-[#009719]">
-                                    {formatPrice(minPrice)} <span className="text-sm font-medium">
+                                    {formatPrice(minPrice)}{" "}
+                                    <span className="text-sm font-medium">
                                         টাকা
                                     </span>
                                 </h3>
@@ -262,7 +277,8 @@ const page = async ({params}: {params: Promise<{ productId: string }>}) => {
                                 </p>
 
                                 <h3 className="mt-1 text-2xl font-bold text-[#d80000]">
-                                    {formatPrice(maxPrice)} <span className="text-sm font-medium">
+                                    {formatPrice(maxPrice)}{" "}
+                                    <span className="text-sm font-medium">
                                         টাকা
                                     </span>
                                 </h3>
@@ -279,16 +295,16 @@ const page = async ({params}: {params: Promise<{ productId: string }>}) => {
                                 </p>
 
                                 <h3 className="mt-1 text-2xl font-bold text-[#000dc3]">
-                                    {formatPrice(averagePrice)} <span className="text-sm font-medium">
+                                    {formatPrice(averagePrice)}{" "}
+                                    <span className="text-sm font-medium">
                                         টাকা
                                     </span>
                                 </h3>
 
                                 <p className="mt-1 text-xs font-medium text-gray-600">
                                     প্রতি{" "}
-                                    {unitNames[
-                                        productData.unit
-                                    ] ?? productData.unit}{" "}
+                                    {unitNames[productData.unit] ??
+                                        productData.unit}{" "}
                                     হিসেবে
                                 </p>
                             </div>
@@ -325,15 +341,14 @@ const page = async ({params}: {params: Promise<{ productId: string }>}) => {
                                     <tbody>
                                         {markets.map((market, index) => {
                                             const marketAverage =
-                                                (market.min +
-                                                    market.max) /
-                                                2;
+                                                (market.min + market.max) / 2;
 
                                             return (
                                                 <tr
                                                     key={`${market.market}-${index}`}
-                                                    className={`border-b border-[#dce2dc] last:border-b-0 ${index %
-                                                        2 === 0 ? "bg-[#f9fcf9]" : "bg-[#f0f5f0]"
+                                                    className={`border-b border-[#dce2dc] last:border-b-0 ${index % 2 === 0
+                                                            ? "bg-[#f9fcf9]"
+                                                            : "bg-[#f0f5f0]"
                                                         }`}
                                                 >
                                                     <td className="whitespace-nowrap px-3 py-3 font-medium text-[#1d271f] md:px-4">
@@ -345,16 +360,12 @@ const page = async ({params}: {params: Promise<{ productId: string }>}) => {
                                                     </td>
 
                                                     <td className="whitespace-nowrap px-3 py-3 text-right text-[#1d271f] md:px-4">
-                                                        {formatPrice(
-                                                            market.min
-                                                        )}{" "}
+                                                        {formatPrice(market.min)}{" "}
                                                         টাকা
                                                     </td>
 
                                                     <td className="whitespace-nowrap px-3 py-3 text-right text-[#1d271f] md:px-4">
-                                                        {formatPrice(
-                                                            market.max
-                                                        )}{" "}
+                                                        {formatPrice(market.max)}{" "}
                                                         টাকা
                                                     </td>
 
@@ -374,8 +385,7 @@ const page = async ({params}: {params: Promise<{ productId: string }>}) => {
                                                     colSpan={5}
                                                     className="px-4 py-8 text-center text-gray-500"
                                                 >
-                                                    কোনো বাজারের
-                                                    তথ্য পাওয়া
+                                                    কোনো বাজারের তথ্য পাওয়া
                                                     যায়নি।
                                                 </td>
                                             </tr>

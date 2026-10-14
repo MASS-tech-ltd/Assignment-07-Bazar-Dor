@@ -1,5 +1,6 @@
 import allProductsDataTypes from "@/app/allProductsDataTypes";
 import Sorting from "@/app/Components/Sorting";
+import { notFound } from "next/navigation";
 
 
 const page = async ({ params }: { params: Promise<{ categoryId: string }> }) => {
@@ -9,6 +10,10 @@ const page = async ({ params }: { params: Promise<{ categoryId: string }> }) => 
         throw new Error("Products fetch failed");
     }
     const categoryData: allProductsDataTypes[] = await res.json();
+
+    if(categoryData.length === 0){
+            notFound();
+        }
 
     return (
         <div className="container mx-auto mt-6">
