@@ -24,6 +24,7 @@ const PriceDecreased = async () => {
             <div className="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-4 lg:mt-4 md:mt-3 mt-3">
                 {
                     allProducts.filter((product: allProductsDataTypes) => product.change.dir === "down")
+                        .sort((a, b) => a.change.pct - b.change.pct)
                         .slice(0, 6).map((product: allProductsDataTypes) =>
                             <Link key={product.id} href={`/product/${product.id}`}>
                                 <div

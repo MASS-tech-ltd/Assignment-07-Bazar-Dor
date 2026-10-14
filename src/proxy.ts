@@ -13,12 +13,16 @@ export async function proxy(request: NextRequest) {
     const user = session?.user;
 
     if (!user) {
-        return NextResponse.redirect(new URL('/sign-in', request.url))
+        const signInUrl = new URL('/sign-in', request.url);
+
+        signInUrl.searchParams.set("message", "login-required");
+
+        return NextResponse.redirect(signInUrl);
     }
 
 
 }
 
 export const config = {
-    matcher: ["/profile", "/product/:path"],
+    matcher: ["/profile", "/profile-update", "/product/:path"],
 }

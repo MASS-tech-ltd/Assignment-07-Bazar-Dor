@@ -3,9 +3,9 @@
 
 import { authClient } from "@/lib/auth-client";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { Bounce, toast } from "react-toastify";
-import { useState, type FormEvent } from "react";
+import { useEffect, useState, type FormEvent } from "react";
 
 const SignInPage = () => {
     const router = useRouter();
@@ -16,9 +16,7 @@ const SignInPage = () => {
     // Sign In button loading state
     const [isSigningIn, setIsSigningIn] = useState(false);
 
-    const handleLoginSubmit = async (
-        e: FormEvent<HTMLFormElement>
-    ) => {
+    const handleLoginSubmit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
         // Prevent multiple submissions
@@ -92,6 +90,25 @@ const SignInPage = () => {
             setIsSigningIn(false);
         }
     };
+
+    // Protected route redirect toast
+    const searchParams = useSearchParams();
+
+    useEffect(() => {
+        if (searchParams.get("message") === "login-required") {
+            toast.error("এই পেজটি দেখতে আগে সাইন ইন করুন!", {
+                toastId: "login-required",
+                autoClose: 2000,
+                hideProgressBar: false,
+                closeOnClick: false,
+                pauseOnHover: true,
+                draggable: true,
+                theme: "dark",
+                transition: Bounce,
+            });
+        }
+    }, [searchParams]);
+
 
     // Google sign in part (unchanged)
     const handleGoogleSignIn = async () => {
@@ -207,8 +224,8 @@ const SignInPage = () => {
                                         }
                                     }}
                                     className={`h-[34px] w-full rounded-lg border ${emailError
-                                            ? "border-red-500 focus:border-red-500 focus:ring-red-500/10"
-                                            : "border-[#e0e5e0] focus:border-[#078744] focus:ring-[#078744]/10"
+                                        ? "border-red-500 focus:border-red-500 focus:ring-red-500/10"
+                                        : "border-[#e0e5e0] focus:border-[#078744] focus:ring-[#078744]/10"
                                         } bg-transparent px-3 text-xs text-[#1d271f] outline-none placeholder:text-[#626962] transition focus:ring-2`}
                                 />
 
@@ -241,8 +258,8 @@ const SignInPage = () => {
                                         }
                                     }}
                                     className={`h-[34px] w-full rounded-lg border ${passwordError
-                                            ? "border-red-500 focus:border-red-500 focus:ring-red-500/10"
-                                            : "border-[#e0e5e0] focus:border-[#078744] focus:ring-[#078744]/10"
+                                        ? "border-red-500 focus:border-red-500 focus:ring-red-500/10"
+                                        : "border-[#e0e5e0] focus:border-[#078744] focus:ring-[#078744]/10"
                                         } bg-transparent px-3 text-xs text-[#1d271f] outline-none placeholder:text-[#626962] transition focus:ring-2`}
                                 />
 
